@@ -1,0 +1,36 @@
+#!/usr/bin/env ruby
+
+$LOAD_PATH.unshift File.expand_path("../lib", __dir__)
+
+require 'mercenary'
+require 'repotube'
+
+Mercenary.program(:repotube) do |p|
+  p.version RepoTube::VERSION
+  p.description "YouTube time-marked URLs from Git commit timestamps"
+  p.syntax "repotube [options] <youtube short URL>"
+
+  p.command (:version) do |c|
+    c.description "Output the version number"
+    c.syntax "version"
+    c.action do |_,_|
+      puts RepoTube::VERSION
+    end
+  end
+
+
+
+
+
+  p.action do |args, _|
+      if args.empty?
+        puts p
+      else
+        subcommand = args.first
+        unless p.has_command? subcommand
+          puts "Sorry, I don't know how to '#{args.first}'."
+          puts "Try running `repotube --help` for help."
+        end
+      end
+    end
+end

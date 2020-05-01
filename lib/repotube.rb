@@ -1,62 +1,84 @@
 #! /usr/bin/env ruby
 
+require 'pathname'
+
 module RepoTube
   VERSION = "0.0.0"
 
-  START_TIME = 3370
-  OFFSET = 5587
-  RANGE = "84132b8~1..dd71748"
-  COMMITS = ""
-  #COMMITS = `git log #{RANGE} --date=unix --format=tformat:"%at|%h|%s" --reverse`
-  def refactor_me
+  class Program
+    #COMMITS = `git log #{RANGE} --date=unix --format=tformat:"%at|%h|%s" --reverse`
 
-    commits = COMMITS.split("\n")
+    attr_reader :git_path, :url, :start, :offset, :first, :last, :commits
 
-    commits.map! do |commit|
-      c = commit.split("|")
-      commit = {
-        ut: c[0].to_i,
-        ch: c[1],
-        cs: c[2]
-      }
+    def initialize(args,options)
+      @git_path = Pathname.new(File.expand_path('.git', Dir.pwd))
+
+      @url = args.last.chomp unless args.length < 1
+      @start = set_value(options['start'].to_i, 0)
+      @offset = set_value(options['offset'].to_i, 0)
+      @first = set_value(options['first'], "")
+      @last = set_value(options['last'], "HEAD")
+
+      @commits = log_commits
+
     end
 
-    commits[0][:offset] = START_TIME
-    commits[1][:offset] = OFFSET
+    def is_repo?
+      @git_path.exist?
+    end
 
-    commits.each_index do |i|
-      if (i > 1)
-        commits[i][:offset] = commits[i-1][:ut] - commits[0][:ut] + OFFSET
+    def log_commits
+      # TODO: include the range
+      if !@first.empty?
+        range = "#{@first}~1..#{@last}"
+      else
+        range = ""
+      end
+      if is_repo?
+        `git log #{range} --date=unix --format=tformat:"%at|%h|%s" --reverse`
+      else
+        puts "Oops. repotube must be run in a Git repository"
+        abort
       end
     end
 
-    puts "Video Index:"
-    commits.each do |commit|
-      puts "#{commit[:cs]}: https://youtu.be/V-rIj30x_LM?t=#{commit[:offset]}"
+    def set_value(custom,default)
+      if custom.to_s.empty?
+        custom = default
+      end
+      custom
     end
 
+    def process_commits
+      commits = @commits.split("\n")
 
-    # START_TIME = 1310 seconds (work begins on what will be the first commit)
-    # OFFSET = 2589 seconds (from start to first commit)
+      commits.map! do |commit|
+        c = commit.split("|")
+        commit = {
+          ut: c[0].to_i,
+          ch: c[1],
+          cs: c[2]
+        }
+      end
 
-    # A 1536785896 | Add and link to stylesheet; start: START_TIME [1310]
-    # B 1536785931 | Add minified Eric Meyer Reset CSS; start: OFFSET [2552]
-    # C 1536787245 | Add viewport meta element; start: [C - B] 1314 + B.OFFSET [3866]
-    # D 1536787353 | start: [D - C] 108 + C.OFFSET [3974] >
-    # D happens at 4009
+      commits[0][:offset] = @start
+      commits[1][:offset] = @offset
 
-    # A: 0 [t=1310]
-    # B: 35 seconds after A [t=2552] (A commit; begin B)
-    # C: 1349 seconds after A [t=2587] (B commit; begin C)
-    # D: 1457 seconds after A [t=3901] (C commit; begin D)
+      commits.each_index do |i|
+        if (i > 1)
+          commits[i][:offset] = commits[i-1][:ut] - commits[0][:ut] + @offset
+        end
+      end
 
-    #
-    # SO.
-    #
-    # A will get the start time specified as START_TIME
-    # B will get the start time specified as OFFSET
-    # C will get the start time of B's start time + [B - A]
-    # D will get the start time of C's start time + [C - A]
-    # D's seconds after C do not matter
+      @commits = commits
+    end
+
+    def output_index
+      puts "Video Index by Commit:"
+      @commits.each do |commit|
+        puts "#{commit[:cs]}: https://youtu.be/V-rIj30x_LM?t=#{commit[:offset]}"
+      end
+    end
+
   end
 end

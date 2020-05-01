@@ -3,7 +3,7 @@
 require 'pathname'
 
 module RepoTube
-  VERSION = "0.0.0"
+  VERSION = "0.1.0"
 
   class Program
     #COMMITS = `git log #{RANGE} --date=unix --format=tformat:"%at|%h|%s" --reverse`

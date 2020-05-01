@@ -6,31 +6,26 @@ require 'mercenary'
 require 'repotube'
 
 Mercenary.program(:repotube) do |p|
+
   p.version RepoTube::VERSION
   p.description "YouTube time-marked URLs from Git commit timestamps"
   p.syntax "repotube [options] <youtube short URL>"
+  p.option "start", "-s SECONDS", 'Set the timestamp for the first commit; defaults to 0'
+  p.option "offset", "-o SECONDS", "Set the offset, from the start of the video, for the first commit;\n                           defaults to 0"
+  p.option "first", "-f HASH", "Set the hash of the first commit in the video"
+  p.option "last", "-l HASH", "Set the hash of the last commit in the video"
 
-  p.command (:version) do |c|
-    c.description "Output the version number"
-    c.syntax "version"
-    c.action do |_,_|
-      puts RepoTube::VERSION
+  p.action do |args, options|
+    thing = RepoTube::Program.new(args,options)
+    if thing.is_repo?
+      puts "At least we're in a Git repo"
+      thing.process_commits
+      puts thing.commits
+      thing.output_index
+    else
+      puts "Not a Git repo!"
+      abort
     end
   end
 
-
-
-
-
-  p.action do |args, _|
-      if args.empty?
-        puts p
-      else
-        subcommand = args.first
-        unless p.has_command? subcommand
-          puts "Sorry, I don't know how to '#{args.first}'."
-          puts "Try running `repotube --help` for help."
-        end
-      end
-    end
 end

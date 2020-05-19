@@ -76,7 +76,7 @@ module RepoTube
     def output_index
       puts "Video Index by Commit:"
       @commits.each do |commit|
-        puts "#{commit[:cs]}: https://youtu.be/V-rIj30x_LM?t=#{commit[:offset]}"
+        puts "#{commit[:cs]}: #{@url}?t=#{commit[:offset]}"
       end
       puts "YouTube-Friendly Index by Commit:"
       @commits.each do |commit|

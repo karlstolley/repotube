@@ -78,6 +78,10 @@ module RepoTube
       @commits.each do |commit|
         puts "#{commit[:cs]}: https://youtu.be/V-rIj30x_LM?t=#{commit[:offset]}"
       end
+      puts "YouTube-Friendly Index by Commit:"
+      @commits.each do |commit|
+        puts  "#{Time.at(commit[:offset]).utc.strftime("%H:%M:%S")} #{commit[:cs]}"
+      end
     end
 
   end

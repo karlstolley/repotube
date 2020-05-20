@@ -20,6 +20,7 @@ module RepoTube
       @remote = set_value(options['remote'], discover_remote)
       @readme = set_value(options['readme'],"README.md")
       @noreadme = options['noreadme']
+      @nointro = options['nointro']
       @commits = log_commits
 
     end
@@ -80,6 +81,9 @@ module RepoTube
     def output_index
       puts "\nYouTube-Friendly Index by Commit"
       puts "(cut and paste into the YouTube description box):\n\n"
+      if @nointro.nil?
+        puts "00:00:00 Introduction"
+      end
       @commits.each do |commit|
         puts  "#{Time.at(commit[:offset]).utc.strftime("%H:%M:%S")} #{commit[:cs]}"
       end

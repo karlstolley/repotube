@@ -17,6 +17,7 @@ Mercenary.program(:repotube) do |p|
   p.option "remote", "-r USERNAME/REPO", "--remote USERNAME/REPO", "Set the remote repo path on GitHub; auto-detected if repo has a remote"
   p.option "readme", "-d FILENAME", "--readme FILENAME", "Set the README file name; defaults to README.md"
   p.option "noreadme", "-n", "--no-readme", "Disable generating the README.md file"
+  p.option "nointro", "-x", "--no-intro", "Supress '00:00:00 Introduction' marker in YouTube output "
 
   p.action do |args, options|
     if args.empty?

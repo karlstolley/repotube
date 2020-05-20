@@ -36,7 +36,7 @@ module RepoTube
         range = ""
       end
       if is_repo?
-        `git log #{range} --date=unix --format=tformat:"%at|%h|%s" --reverse`
+        `git log #{range} --date=unix --format=tformat:"%at|%H|%s" --reverse`
       else
         puts "Oops. repotube must be run in a Git repository"
         abort

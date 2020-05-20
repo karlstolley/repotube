@@ -18,6 +18,7 @@ module RepoTube
       @offset = set_value(options['offset'].to_i, 0)
       @first = set_value(options['first'], "")
       @last = set_value(options['last'], "HEAD")
+      @remote = set_value(options['remote'], discover_remote)
 
       @commits = log_commits
 
@@ -40,6 +41,10 @@ module RepoTube
         puts "Oops. repotube must be run in a Git repository"
         abort
       end
+    end
+
+    def discover_remote
+      `git remote -v`.split("\n")[0].match(/:(.+).git+/)[1]
     end
 
     def set_value(custom,default)

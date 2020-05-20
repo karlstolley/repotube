@@ -14,6 +14,7 @@ Mercenary.program(:repotube) do |p|
   p.option "offset", "-o SECONDS", "--offset SECONDS", "Set the offset, from the start of the video, for the first commit;\n                           defaults to 0"
   p.option "first", "-f HASH", "--first HASH", "Set the hash of the first commit in the video"
   p.option "last", "-l HASH", "--last HASH", "Set the hash of the last commit in the video"
+  p.option "remote", "-r USERNAME/REPO", "--remote USERNAME/REPO", "Set the remote repo path on GitHub; auto-detected if repo has a remote"
 
   p.action do |args, options|
     thing = RepoTube::Program.new(args,options)

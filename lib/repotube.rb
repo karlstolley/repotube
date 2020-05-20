@@ -94,6 +94,18 @@ module RepoTube
       end
       markdown
     end
+
+    def output_readme
+      # determine whether there's already a README file
+      # if there is, open it
+      # if there is not, create one and open it
+      # then write out some Markdown code with YouTube [Video] and GitHub [Hash] links
+      # 'a' is append mode, which creates a new file if one doesn't exist
+
+      File.open('README.md','a') do |file|
+        file.write(output_markdown)
+      end
+
     end
 
   end

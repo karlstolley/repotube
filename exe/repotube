@@ -19,10 +19,10 @@ Mercenary.program(:repotube) do |p|
   p.action do |args, options|
     thing = RepoTube::Program.new(args,options)
     if thing.is_repo?
-      puts "At least we're in a Git repo"
       thing.process_commits
-      puts thing.commits
       thing.output_index
+      #puts thing.discover_remote
+      thing.output_readme
     else
       puts "Not a Git repo!"
       abort

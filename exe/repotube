@@ -17,14 +17,19 @@ Mercenary.program(:repotube) do |p|
   p.option "remote", "-r USERNAME/REPO", "--remote USERNAME/REPO", "Set the remote repo path on GitHub; auto-detected if repo has a remote"
 
   p.action do |args, options|
-    rt = RepoTube::Program.new(args,options)
-    if rt.is_repo?
-      rt.process_commits
-      rt.output_index
-      rt.output_readme
-    else
-      puts "Not a Git repo!"
+    if args.empty?
+      puts "A YouTube URL is required"
       abort
+    else
+      rt = RepoTube::Program.new(args,options)
+      if rt.is_repo?
+        rt.process_commits
+        rt.output_index
+        rt.output_readme
+      else
+        puts "Not a Git repo!"
+        abort
+      end
     end
   end
 

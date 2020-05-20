@@ -15,6 +15,7 @@ Mercenary.program(:repotube) do |p|
   p.option "first", "-f HASH", "--first HASH", "Set the hash of the first commit in the video"
   p.option "last", "-l HASH", "--last HASH", "Set the hash of the last commit in the video"
   p.option "remote", "-r USERNAME/REPO", "--remote USERNAME/REPO", "Set the remote repo path on GitHub; auto-detected if repo has a remote"
+  p.option "noreadme", "-n", "--no-readme", "Disable generating the README.md file"
 
   p.action do |args, options|
     if args.empty?

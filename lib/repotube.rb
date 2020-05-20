@@ -18,7 +18,7 @@ module RepoTube
       @first = set_value(options['first'], "")
       @last = set_value(options['last'], "HEAD")
       @remote = set_value(options['remote'], discover_remote)
-
+      @noreadme = options['noreadme']
       @commits = log_commits
 
     end
@@ -96,8 +96,10 @@ module RepoTube
     def output_readme
       # NB: Append mode will create a file if it doesn't exist
       # TODO: Handle different name for README file
-      File.open('README.md','a') do |file|
-        file.write(output_markdown)
+      if @noreadme.nil?
+        File.open('README.md','a') do |file|
+          file.write(output_markdown)
+        end
       end
 
     end

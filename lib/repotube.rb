@@ -86,9 +86,14 @@ module RepoTube
       end
       puts "\n"
     end
+
+    def output_markdown
+      markdown = "## [YouTube Video](#{@url}) Indexes by Commit\n"
       @commits.each do |commit|
-        puts  "#{Time.at(commit[:offset]).utc.strftime("%H:%M:%S")} #{commit[:cs]}"
+        markdown += "* [#{commit[:cs]}](https://github.com/#{@remote}/commit/#{commit[:ch]}) [[Video](#{@url}?t=#{commit[:offset]})]\n"
       end
+      markdown
+    end
     end
 
   end
